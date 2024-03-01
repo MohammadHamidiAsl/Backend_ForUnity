@@ -1,3 +1,5 @@
+./uploads/*
+./public/webgl-builds/*
 # Logs
 logs
 *.log

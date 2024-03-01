@@ -13,6 +13,11 @@ app.use('/public', express.static('public'));
 app.get('/upload', (req, res) => {
     res.sendFile(__dirname + '/public/upload.html');
 });
+
+app.get('/games', (req, res) => {
+    res.sendFile(__dirname + '/public/manageGames.html');
+});
+
 app.use((req, res, next) => {
     // Remove Content-Encoding header for .wasm files
     if (req.path.endsWith('.wasm')) {
