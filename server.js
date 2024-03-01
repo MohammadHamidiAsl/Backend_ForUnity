@@ -37,7 +37,7 @@ app.use(express.static('public'));
 app.use('unity/api/assets', assetRoutes);
 
 // Basic route for testing the server
-app.get('unity/', (req, res) => {
+app.get('/unity', (req, res) => {
     res.send('Hello, WebGL Game Server is running!');
 });
 
