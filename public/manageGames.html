@@ -25,7 +25,7 @@
     <script>
         // Function to load and display games
         function loadGames() {
-            fetch('unity/api/games/list')
+            fetch('/unity/api/games/list')
                 .then(response => response.json())
                 .then(games => {
                     const listContainer = document.getElementById('gamesList');
@@ -46,7 +46,7 @@
 
         // Function to delete a game
         function deleteGame(id) {
-            fetch(`unity/api/games/delete/${id}`, { method: 'DELETE' })
+            fetch(`/unity/api/games/delete/${id}`, { method: 'DELETE' })
                 .then(response => {
                     if (response.ok) {
                         loadGames(); // Reload the list after deletion
