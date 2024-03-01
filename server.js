@@ -1,5 +1,10 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const app = express();
+
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
+
 const PORT = process.env.PORT || 3000;
 const assetRoutes = require('./api/v1/assets/assetRoutes');
 const userRoutes = require('./api/v1/users/userRoutes');
