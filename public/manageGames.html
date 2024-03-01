@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Games</title>
+</head>
+
+<body>
+    <h1>Manage Games</h1>
+    <div id="gamesList"></div>
+
+    <script>
+        // Function to load and display games
+        function loadGames() {
+            fetch('/api/games/list')
+                .then(response => response.json())
+                .then(games => {
+                    const listContainer = document.getElementById('gamesList');
+                    listContainer.innerHTML = ''; // Clear existing list
+
+                    games.forEach(game => {
+                        const listItem = document.createElement('div');
+                        listItem.innerHTML = `
+                            <span>${game.name}</span>
+                            <button onclick="deleteGame('${game.name}')">Delete</button>
+                        `;
+                        listContainer.appendChild(listItem);
+                    });
+                })
+                .catch(error => console.error('Error loading games:', error));
+        }
+
+        // Function to delete a game
+        function deleteGame(gameName) {
+            fetch(`/api/games/delete/${gameName}`, { method: 'DELETE' })
+                .then(response => {
+                    if (response.ok) {
+                        loadGames(); // Reload the list after deletion
+                    } else {
+                        alert('Failed to delete game.');
+                    }
+                })
+                .catch(error => console.error('Error deleting game:', error));
+        }
+
+        // Load games when the page loads
+        window.onload = loadGames;
+    </script>
+</body>
+
+</html>

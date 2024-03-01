@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <title>Upload WebGL Game</title>
+</head>
+
+<body class="p-3 mb-2 bg-light">
+    <div class="container">
+        <h2 class="mb-3">Upload a New WebGL Game</h2>
+        <form id="uploadForm" action="/api/games/upload" method="post" enctype="multipart/form-data" class="mb-3">
+            <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" name="gameBuild" accept=".zip" required>
+                <label class="custom-file-label" for="gameBuild">Choose file...</label>
+            </div>
+            <div class="form-group">
+                <input type="text" name="gameName" class="form-control" placeholder="Enter game name" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Upload Game</button>
+        </form>
+        <div id="progressBar" class="progress" style="display:none;">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                style="width: 0%;">0%</div>
+        </div>
+    </div>
+
+    <script>
+        // Change detection for custom file input label
+        document.querySelector('.custom-file-input').addEventListener('change', function (e) {
+            var fileName = document.getElementById("uploadForm").gameBuild.value.split("\\").pop();
+            this.nextElementSibling.innerText = fileName;
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const formData = new FormData(this);
+            const xhr = new XMLHttpRequest();
+
+            // Show the progress bar
+            document.getElementById('progressBar').style.display = 'block';
+
+            xhr.open('POST', this.action, true);
+
+            xhr.upload.onprogress = function (e) {
+                if (e.lengthComputable) {
+                    const percentage = Math.round((e.loaded / e.total) * 100);
+                    const progressBar = document.querySelector('.progress-bar');
+                    progressBar.style.width = percentage + '%';
+                    progressBar.textContent = percentage + '%';
+                }
+            };
+
+            xhr.onload = function () {
+                if (xhr.status == 200) {
+                    alert('Game uploaded successfully!');
+                    // Reset progress bar
+                    const progressBar = document.querySelector('.progress-bar');
+                    progressBar.style.width = '0%';
+                    progressBar.textContent = '0%';
+                    document.getElementById('progressBar').style.display = 'none';
+                    // Reset the form
+                    document.getElementById('uploadForm').reset();
+                    document.querySelector('.custom-file-label').innerText = 'Choose file...';
+                } else {
+                    alert('Error uploading game.');
+                    document.getElementById('progressBar').style.display = 'none';
+                }
+            };
+
+            xhr.send(formData);
+        });
+    </script>
+</body>
+
+</html>
